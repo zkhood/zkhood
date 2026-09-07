@@ -5,8 +5,7 @@
 zkhood is a privacy layer that settles on
 [Robinhood Chain](https://docs.robinhood.com/chain) (an Arbitrum-style L2). Batches are executed
 **instantly and privately inside a TEE** running a real EVM, and the *same* execution is then
-**proven with a zkVM** and settled on-chain. This is the design summarized as **Option A: "TEE for
-speed, ZK for finality."**
+**proven with a zkVM** and settled on-chain.
 
 ## How it fits together
 
