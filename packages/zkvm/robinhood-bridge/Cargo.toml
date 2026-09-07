@@ -1,0 +1,22 @@
+[package]
+name = "zkhood-robinhood-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "Trustless bridge: verifies Robinhood Chain L2 state via a Helios light client on Ethereum L1, for the TEE-native host only (never linked into the SP1 guest)."
+
+[dependencies]
+zkhood-revm-executor = { path = "../revm-executor" }
+alloy = { version = "1", features = ["rpc-types", "provider-http", "network", "json-rpc", "sol-types", "consensus"] }
+alloy-trie = { version = "0.9", features = ["ethereum"] }
+alloy-rlp = "0.3"
+revm = { version = "43", default-features = false, features = ["serde", "std"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+eyre = "0.6"
+hex = "0.4"
+tracing = "0.1"
+
+[dev-dependencies]
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+dotenvy = "0.15"

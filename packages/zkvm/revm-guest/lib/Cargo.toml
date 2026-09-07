@@ -1,0 +1,11 @@
+[package]
+name = "zkhood-revm-guest-lib"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+alloy-sol-types = { workspace = true }
+alloy-primitives = "*"
+revm = { version = "43", default-features = false, features = ["serde", "std"] }
+serde = { version = "1", features = ["derive"] }
+zkhood-revm-executor = { path = "../../revm-executor" }

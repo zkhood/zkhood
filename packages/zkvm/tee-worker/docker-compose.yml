@@ -1,0 +1,40 @@
+# Marlin Oyster CVM deployment for the ZKHood TEE fast-path worker.
+# Deploy with: oyster-cvm deploy --wallet-private-key <key> --duration-in-minutes N \
+#              --docker-compose docker-compose.yml --arch amd64
+#
+# Replace `image:` values with your published images (Oyster pulls them inside the enclave). Build/push:
+#   docker build -t <you>/zkhood-tee-worker:latest -f tee-worker/Dockerfile .   # context: packages/zkvm
+#   docker push <you>/zkhood-tee-worker:latest
+#
+# Two services run in the same enclave:
+#   - helios: a light client turning an untrusted Sepolia RPC into a locally-verified L1 RPC.
+#   - tee-worker: executes REVM over state it verifies against that L1 RPC + a Robinhood L2 RPC.
+# For dev-only (mock) mode, omit the helios service and leave ROBINHOOD_RPC_URL unset.
+services:
+  helios:
+    image: REPLACE_ME/zkhood-helios:latest
+    init: true
+    network_mode: host
+    restart: unless-stopped
+    # Entrypoint should run: helios ethereum --network sepolia \
+    #   --execution-rpc $SEPOLIA_EXECUTION_RPC --consensus-rpc $SEPOLIA_CONSENSUS_RPC \
+    #   --load-external-fallback --rpc-bind-ip 127.0.0.1
+    environment:
+      - SEPOLIA_EXECUTION_RPC=${SEPOLIA_EXECUTION_RPC}
+      - SEPOLIA_CONSENSUS_RPC=http://unstable.sepolia.beacon-api.nimbus.team/
+
+  tee-worker:
+    image: REPLACE_ME/zkhood-tee-worker:latest
+    init: true
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - helios
+    environment:
+      - PORT=4000
+      - RUST_LOG=info
+      - HELIOS_RPC=http://127.0.0.1:8545
+      - UNTRUSTED_L1_RPC=https://ethereum-sepolia.publicnode.com
+      # Set to an ARCHIVE Robinhood RPC to enable verified-state execution; unset = dev-only.
+      - ROBINHOOD_RPC_URL=${ROBINHOOD_RPC_URL}
+      - ROBINHOOD_NETWORK=testnet

@@ -1,0 +1,13 @@
+[package]
+name = "zkhood-revm-executor"
+version = "0.1.0"
+edition = "2021"
+description = "Shared REVM batch execution used natively by the TEE worker and proved by the SP1 guest program."
+
+[dependencies]
+revm = { version = "43", default-features = false, features = ["serde", "std"] }
+alloy-primitives = "*"
+sha3 = "0.10"
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]

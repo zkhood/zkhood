@@ -1,0 +1,36 @@
+[package]
+version = "0.1.0"
+name = "zkhood-revm-guest-script"
+edition = "2021"
+default-run = "zkhood-revm-guest"
+
+[[bin]]
+name = "zkhood-revm-guest"
+path = "src/bin/main.rs"
+
+[[bin]]
+name = "evm"
+path = "src/bin/evm.rs"
+
+[[bin]]
+name = "vkey"
+path = "src/bin/vkey.rs"
+
+[dependencies]
+# native-gnark (real Groth16 proving) needs Go >= 1.24; installed Go here is 1.18.1. Dropped for
+# now since --execute validation doesn't need it; re-add once a real proof must be generated.
+sp1-sdk = { version = "6.0.1", features = ["blocking"] }
+serde_json = { version = "1.0", default-features = false, features = ["alloc"] }
+serde = { version = "1.0.200", default-features = false, features = ["derive"] }
+clap = { version = "4.0", features = ["derive", "env"] }
+tracing = "0.1.40"
+hex = "0.4.3"
+alloy-sol-types = { workspace = true }
+alloy-primitives = "*"
+zkhood-revm-guest-lib = { path = "../lib" }
+zkhood-revm-executor = { path = "../../revm-executor" }
+revm = { version = "43", features = ["serde"] }
+dotenv = "0.15.0"
+
+[build-dependencies]
+sp1-build = { version = "6.0.1" }
